@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.better.alarm"
+    package="com.premium.alarm"
     android:versionCode="2420"
     android:versionName="2.4.20" >
 
@@ -60,12 +60,12 @@
             android:name=".presenter.alert.AlarmAlertReceiver"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.better.alarm.ALARM_ALERT" />
-                <action android:name="com.better.alarm.ALARM_PREALARM_ACTION" />
-                <action android:name="com.better.alarm.ALARM_SNOOZE" />
-                <action android:name="com.better.alarm.ACTION_CANCEL_SNOOZE" />
-                <action android:name="com.better.alarm.ALARM_DISMISS" />
-                <action android:name="com.better.alarm.ACTION_SOUND_EXPIRED" />
+                <action android:name="com.premium.alarm.ALARM_ALERT" />
+                <action android:name="com.premium.alarm.ALARM_PREALARM_ACTION" />
+                <action android:name="com.premium.alarm.ALARM_SNOOZE" />
+                <action android:name="com.premium.alarm.ACTION_CANCEL_SNOOZE" />
+                <action android:name="com.premium.alarm.ALARM_DISMISS" />
+                <action android:name="com.premium.alarm.ACTION_SOUND_EXPIRED" />
             </intent-filter>
         </receiver>
 
@@ -93,17 +93,17 @@
             android:name=".presenter.background.KlaxonService$Receiver"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.better.alarm.ALARM_ALERT" />
-                <action android:name="com.better.alarm.ALARM_PREALARM_ACTION" />
-                <action android:name="com.better.alarm.ALARM_SNOOZE" />
-                <action android:name="com.better.alarm.ALARM_DISMISS" />
-                <action android:name="com.better.alarm.ACTION_SOUND_EXPIRED" />
-                <action android:name="com.better.alarm.ACTION_START_PREALARM_SAMPLE" />
-                <action android:name="com.better.alarm.ACTION_STOP_PREALARM_SAMPLE" />
-                <action android:name="com.better.alarm.ACTION_START_ALARM_SAMPLE" />
-                <action android:name="com.better.alarm.ACTION_STOP_ALARM_SAMPLE" />
-                <action android:name="com.better.alarm.ACTION_MUTE" />
-                <action android:name="com.better.alarm.ACTION_DEMUTE" />
+                <action android:name="com.premium.alarm.ALARM_ALERT" />
+                <action android:name="com.premium.alarm.ALARM_PREALARM_ACTION" />
+                <action android:name="com.premium.alarm.ALARM_SNOOZE" />
+                <action android:name="com.premium.alarm.ALARM_DISMISS" />
+                <action android:name="com.premium.alarm.ACTION_SOUND_EXPIRED" />
+                <action android:name="com.premium.alarm.ACTION_START_PREALARM_SAMPLE" />
+                <action android:name="com.premium.alarm.ACTION_STOP_PREALARM_SAMPLE" />
+                <action android:name="com.premium.alarm.ACTION_START_ALARM_SAMPLE" />
+                <action android:name="com.premium.alarm.ACTION_STOP_ALARM_SAMPLE" />
+                <action android:name="com.premium.alarm.ACTION_MUTE" />
+                <action android:name="com.premium.alarm.ACTION_DEMUTE" />
             </intent-filter>
         </receiver>
         <service
@@ -117,12 +117,12 @@
             android:name=".presenter.background.VibrationService$Receiver"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.better.alarm.ALARM_ALERT" />
-                <action android:name="com.better.alarm.ALARM_SNOOZE" />
-                <action android:name="com.better.alarm.ALARM_DISMISS" />
-                <action android:name="com.better.alarm.ACTION_SOUND_EXPIRED" />
-                <action android:name="com.better.alarm.ACTION_MUTE" />
-                <action android:name="com.better.alarm.ACTION_DEMUTE" />
+                <action android:name="com.premium.alarm.ALARM_ALERT" />
+                <action android:name="com.premium.alarm.ALARM_SNOOZE" />
+                <action android:name="com.premium.alarm.ALARM_DISMISS" />
+                <action android:name="com.premium.alarm.ACTION_SOUND_EXPIRED" />
+                <action android:name="com.premium.alarm.ACTION_MUTE" />
+                <action android:name="com.premium.alarm.ACTION_DEMUTE" />
             </intent-filter>
         </receiver>
         <service
@@ -136,8 +136,8 @@
             android:name=".presenter.background.ScheduledReceiver" 
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.better.alarm.model.Intents.ACTION_ALARMS_UNSCHEDULED" />
-                <action android:name="com.better.alarm.model.Intents.ACTION_ALARM_SCHEDULED" />
+                <action android:name="com.premium.alarm.model.Intents.ACTION_ALARMS_UNSCHEDULED" />
+                <action android:name="com.premium.alarm.model.Intents.ACTION_ALARM_SCHEDULED" />
             </intent-filter>
         </receiver>
 
@@ -146,7 +146,7 @@
             android:name=".presenter.background.ToastPresenter"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.better.alarm.model.Intents.ACTION_ALARM_SET" />
+                <action android:name="com.premium.alarm.model.Intents.ACTION_ALARM_SET" />
             </intent-filter>
         </receiver>
 
@@ -155,9 +155,9 @@
             android:name=".model.AlarmsService$Receiver"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.better.alarm.ACTION_FIRED" />
-                <action android:name="com.better.alarm.ACTION_SNOOZED_FIRED" />
-                <action android:name="com.better.alarm.ACTION_SOUND_EXPIRED" />
+                <action android:name="com.premium.alarm.ACTION_FIRED" />
+                <action android:name="com.premium.alarm.ACTION_SNOOZED_FIRED" />
+                <action android:name="com.premium.alarm.ACTION_SOUND_EXPIRED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
@@ -171,13 +171,13 @@
         <!-- Persistence -->
         <provider
             android:name=".model.persistance.AlarmProvider"
-            android:authorities="com.better.alarm.model"
+            android:authorities="com.premium.alarm.model"
             android:exported="false" />
         <service
             android:name=".model.persistance.DataBaseService"
             android:exported="false" >
             <intent-filter>
-                <action android:name="com.better.alarm.ACTION_SAVE_ALARM" />
+                <action android:name="com.premium.alarm.ACTION_SAVE_ALARM" />
             </intent-filter>
         </service>
     </application>

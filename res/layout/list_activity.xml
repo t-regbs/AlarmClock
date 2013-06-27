@@ -25,14 +25,14 @@
 
     <fragment
         android:id="@+id/alarmsListFragment"
-        android:name="com.better.alarm.presenter.AlarmsListFragment"
+        android:name="com.premium.alarm.presenter.AlarmsListFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
     <fragment
         android:id="@+id/infoFragment"
-        android:name="com.better.alarm.presenter.InfoFragment"
+        android:name="com.premium.alarm.presenter.InfoFragment"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         tools:layout="@layout/info_fragment" />

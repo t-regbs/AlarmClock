@@ -16,7 +16,7 @@
 
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res/com.better.alarm"
+    xmlns:custom="http://schemas.android.com/apk/res/com.premium.alarm"
     android:title="@string/settings">
 
     <CheckBoxPreference
@@ -30,7 +30,7 @@
         android:title="@string/alarm_vibrate"
         android:defaultValue="true" />
 
-    <com.better.alarm.view.VolumePreference
+    <com.premium.alarm.view.VolumePreference
         android:title="@string/alarm_volume_title"
         android:summary="@string/alarm_volume_summary"
         android:dialogTitle="@string/alarm_volume_title"
@@ -80,7 +80,7 @@
         android:summary="@string/volume_button_setting_summary"
         android:defaultValue="2" />
 
-    <com.better.alarm.view.AlarmPreference
+    <com.premium.alarm.view.AlarmPreference
         android:key="default_ringtone"
         android:title="@string/default_ringtone_setting_title"
         android:ringtoneType="alarm"
