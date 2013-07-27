@@ -43,6 +43,7 @@ import com.premium.alarm.model.interfaces.Alarm;
 import com.premium.alarm.model.interfaces.AlarmNotFoundException;
 import com.premium.alarm.model.interfaces.IAlarmsManager;
 import com.premium.alarm.model.interfaces.Intents;
+import com.premium.alarm.presenter.DynamicThemeHandler;
 import com.premium.alarm.presenter.SettingsActivity;
 import com.premium.alarm.presenter.TimePickerDialogFragment;
 import com.premium.alarm.presenter.TimePickerDialogFragment.AlarmTimePickerDialogHandler;
@@ -95,7 +96,9 @@ public class AlarmAlertFullScreen extends Activity implements AlarmTimePickerDia
 
     @Override
     protected void onCreate(Bundle icicle) {
+        setTheme(DynamicThemeHandler.getInstance().getIdForName(getClassName()));
         super.onCreate(icicle);
+
         if (getResources().getBoolean(R.bool.isTablet)) {
             // preserve initial rotation and disable rotation change
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -153,6 +156,10 @@ public class AlarmAlertFullScreen extends Activity implements AlarmTimePickerDia
 
     protected int getLayoutResId() {
         return R.layout.alarm_alert_fullscreen;
+    }
+
+    protected String getClassName() {
+        return AlarmAlertFullScreen.class.getName();
     }
 
     private void updateLayout() {

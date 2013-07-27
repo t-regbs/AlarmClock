@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.premium.alarm"
-    android:versionCode="2420"
-    android:versionName="2.4.20" >
+    android:versionCode="2501"
+    android:versionName="2.5.01"  >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -28,8 +28,7 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/alarm_list_title"
-            android:taskAffinity=""
-            android:theme="@style/AlarmsListTheme">
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -40,14 +39,12 @@
         <activity
             android:name=".presenter.AlarmDetailsActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
-            android:label="@string/set_alarm"
-            android:theme="@style/AlarmDetailsTheme" />
+            android:label="@string/set_alarm"/>
 
         <!-- Application Settings -->
         <activity
             android:name=".presenter.SettingsActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/SettingsTheme"
             android:label="@string/settings"
             android:taskAffinity="" >
             <intent-filter>
@@ -75,8 +72,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
-            android:taskAffinity=""
-            android:theme="@style/AlarmAlertTheme" />
+            android:taskAffinity="" />
 
         <!-- This activity is basically the same as AlarmAlert 
              but full-screen so that it can turn the display on. -->
@@ -85,8 +81,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
-            android:taskAffinity=""
-            android:theme="@style/AlarmAlertFullScreenTheme" />
+            android:taskAffinity="" />
 
         <!-- KlaxonPresenter plays sound -->
         <receiver
