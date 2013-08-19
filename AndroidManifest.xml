@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.premium.alarm"
-    android:versionCode="2501"
-    android:versionName="2.5.01"  >
+    android:versionCode="2508"
+    android:versionName="2.5.08" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -19,13 +19,12 @@
     <application
         android:name=".AlarmApplication"
         android:icon="@mipmap/ic_launcher_alarmclock"
-        android:label="@string/app_label" >
+        android:label="@string/simple_alarm_clock" >
 
         <!-- Activity to set a new or modify existing alarm -->
         <activity
             android:name=".presenter.AlarmsListActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
-            android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/alarm_list_title"
             android:taskAffinity="">
@@ -72,6 +71,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Holo.Dialog"
             android:taskAffinity="" />
 
         <!-- This activity is basically the same as AlarmAlert 

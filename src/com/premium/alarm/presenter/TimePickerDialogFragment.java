@@ -36,6 +36,7 @@ import com.premium.alarm.model.AlarmsManager;
 import com.premium.alarm.model.interfaces.Alarm;
 import com.premium.alarm.model.interfaces.AlarmNotFoundException;
 import com.premium.alarm.view.TimePicker;
+import com.premium.alarm.view.TimePicker.OnInputFinishedListener;
 
 /**
  * Dialog to set alarm time.
@@ -96,19 +97,16 @@ public class TimePickerDialogFragment extends DialogFragment {
                 }
             });
             mPicker = (TimePicker) v.findViewById(R.id.time_picker);
-            mPicker.setSetButton(mSet);
             mSet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final Activity activity = getActivity();
-                    if (activity instanceof AlarmTimePickerDialogHandler) {
-                        final AlarmTimePickerDialogHandler act = (AlarmTimePickerDialogHandler) activity;
-                        act.onDialogTimeSet(alarm, mPicker.getHours(), mPicker.getMinutes());
-                    } else {
-                        log.e("Error! Activities that use TimePickerDialogFragment must implement "
-                                + "AlarmTimePickerDialogHandler");
-                    }
-                    dismiss();
+                    onDialogInputConfirmed();
+                }
+            });
+            mPicker.setOnInputFinishedListener(new OnInputFinishedListener() {
+                @Override
+                public void onInputFinished() {
+                    onDialogInputConfirmed();
                 }
             });
         } catch (AlarmNotFoundException e) {
@@ -117,6 +115,18 @@ public class TimePickerDialogFragment extends DialogFragment {
             dismiss();
         }
         return v;
+    }
+
+    private void onDialogInputConfirmed() {
+        final Activity activity = getActivity();
+        if (activity instanceof AlarmTimePickerDialogHandler) {
+            final AlarmTimePickerDialogHandler act = (AlarmTimePickerDialogHandler) activity;
+            act.onDialogTimeSet(alarm, mPicker.getHours(), mPicker.getMinutes());
+        } else {
+            log.e("Error! Activities that use TimePickerDialogFragment must implement "
+                    + "AlarmTimePickerDialogHandler");
+        }
+        dismiss();
     }
 
     @Override
@@ -147,7 +157,6 @@ public class TimePickerDialogFragment extends DialogFragment {
         if (prev != null) {
             ft.remove(prev);
         }
-        ft.addToBackStack(null);
 
         final TimePickerDialogFragment fragment = TimePickerDialogFragment.newInstance(alarm.getId());
         fragment.show(ft, "time_dialog");

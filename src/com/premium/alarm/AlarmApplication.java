@@ -113,7 +113,7 @@ public class AlarmApplication extends Application {
             }
         });
 
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         logger.d("onCreate");
         super.onCreate();

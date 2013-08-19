@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.github.androidutils.logger.Logger;
 import com.premium.alarm.R;
 import com.premium.alarm.model.AlarmsManager;
+import com.premium.alarm.model.DaysOfWeek;
 import com.premium.alarm.model.interfaces.Alarm;
 import com.premium.alarm.model.interfaces.IAlarmsManager;
 import com.premium.alarm.model.interfaces.Intents;
@@ -74,17 +75,17 @@ public class AlarmsListFragment extends ListFragment {
             } else {
                 rowView = convertView;
             }
-            DigitalClock digitalClock = (DigitalClock) rowView.findViewById(R.id.digitalClock);
+            DigitalClock digitalClock = (DigitalClock) rowView.findViewById(R.id.list_row_digital_clock);
             digitalClock.setLive(false);
 
             // get the alarm which we have to display
             final Alarm alarm = values.get(position);
 
             // now populate rows views
-            View indicator = rowView.findViewById(R.id.indicator);
+            View indicator = rowView.findViewById(R.id.list_row_on_off_checkbox_container);
 
             // Set the initial state of the clock "checkbox"
-            final CheckBox clockOnOff = (CheckBox) indicator.findViewById(R.id.clock_onoff);
+            final CheckBox clockOnOff = (CheckBox) indicator.findViewById(R.id.list_row_on_off_checkbox);
             clockOnOff.setChecked(alarm.isEnabled());
 
             // Clicking outside the "checkbox" should also change the state.
@@ -96,9 +97,9 @@ public class AlarmsListFragment extends ListFragment {
                 }
             });
 
-            View detailsWrapper = rowView.findViewById(R.id.details_wrapper);
+            View detailsWrapper = rowView.findViewById(R.id.details_button_container);
             // Set the initial state of the clock "checkbox"
-            final ImageButton detailsButton = (ImageButton) detailsWrapper.findViewById(R.id.details);
+            final ImageButton detailsButton = (ImageButton) detailsWrapper.findViewById(R.id.list_row_details_button);
             detailsButton.setFocusable(false);
             detailsWrapper.setOnClickListener(new OnClickListener() {
                 @Override
@@ -116,13 +117,19 @@ public class AlarmsListFragment extends ListFragment {
             digitalClock.updateTime(c);
 
             // Set the repeat text or leave it blank if it does not repeat.
-            TextView daysOfWeekView = (TextView) rowView.findViewById(R.id.daysOfWeek);
-            final String daysOfWeekStr = alarm.getDaysOfWeek().toString(getContext(), false);
-            if (daysOfWeekStr != null && daysOfWeekStr.length() != 0) {
-                daysOfWeekView.setText(daysOfWeekStr);
-                daysOfWeekView.setVisibility(View.VISIBLE);
+            TextView subtitle = (TextView) rowView.findViewById(R.id.list_row_daysOfWeek);
+            DaysOfWeek days = alarm.getDaysOfWeek();
+            final String daysOfWeekStr = days.toString(getContext(), false);
+            boolean hasLabel = alarm.getLabel() != null && !alarm.getLabel().isEmpty();
+            boolean everydayOrNever = days != null && (!days.isRepeatSet() || days.isEveryDay());
+            if (everydayOrNever && hasLabel) {
+                subtitle.setText(alarm.getLabel());
+                subtitle.setVisibility(View.VISIBLE);
+            } else if (daysOfWeekStr != null && daysOfWeekStr.length() != 0) {
+                subtitle.setText(daysOfWeekStr);
+                subtitle.setVisibility(View.VISIBLE);
             } else {
-                daysOfWeekView.setVisibility(View.GONE);
+                subtitle.setVisibility(View.GONE);
             }
 
             return rowView;
@@ -255,9 +262,9 @@ public class AlarmsListFragment extends ListFragment {
 
         // Inflate the custom view and set each TextView's text.
         final View v = getActivity().getLayoutInflater().inflate(R.layout.list_context_menu, null);
-        TextView textView = (TextView) v.findViewById(R.id.header_time);
+        TextView textView = (TextView) v.findViewById(R.id.list_context_menu_header_time);
         textView.setText(time);
-        textView = (TextView) v.findViewById(R.id.header_label);
+        textView = (TextView) v.findViewById(R.id.list_context_menu_header_label);
         textView.setText(alarm.getLabel());
 
         // Set the custom view on the menu.
