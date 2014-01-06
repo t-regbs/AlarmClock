@@ -20,6 +20,7 @@
     <string name="alarm_prealarm">Предварительный сигнал</string>
     <string name="prealarm_duration_title">Длительность предв. сигнала</string>
     <string-array name="prealarm_duration_entries">
+        <item>Выкл.</item>
         <item>10 минут</item>
         <item>20 минут</item>
         <item>30 минут</item>
@@ -27,6 +28,7 @@
         <item>60 минут</item>
     </string-array>
     <string name="prealarm_summary">Предварительный сигнал зазвонит через <xliff:g id="minutes">%d</xliff:g> минут перед основным</string>
+    <string name="prealarm_off_summary">Предварительный сигнал выключен</string>
     <string name="main_alarm">Основной сигнал</string>
     <string name="master_volume">Общая громкость</string>
     <string name="share">Поделиться</string>
@@ -68,4 +70,13 @@
         <item>Смелый зеленый</item>
     </string-array>
     <string name="simple_alarm_clock">Простой будильник</string>
+    <string-array name="snooze_duration_with_off_entries">
+        <item>"Выкл."</item>
+        <item>"5 минут"</item>
+        <item>"10 минут"</item>
+        <item>"15 минут"</item>
+        <item>"20 минут"</item>
+        <item>"25 минут"</item>
+        <item>"30 минут"</item>
+    </string-array>
 </resources>

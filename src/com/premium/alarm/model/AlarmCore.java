@@ -344,13 +344,18 @@ public final class AlarmCore implements Alarm {
             protected void onPreAlarmDurationChanged() {
                 // nothing to do
             }
+
+            @Override
+            protected void onEnable() {
+                deferMessage(getCurrentMessage());
+            }
         }
 
         private class RescheduleTransition extends ComplexTransition {
             @Override
             public void performComplexTransition() {
                 if (container.getDaysOfWeek().isRepeatSet()) {
-                    if (container.isPrealarm()) {
+                    if (container.isPrealarm() && prealarmMinutes != -1) {
                         transitionTo(preAlarmSet);
                     } else {
                         transitionTo(set);
@@ -374,7 +379,7 @@ public final class AlarmCore implements Alarm {
             public void performComplexTransition() {
                 Calendar preAlarm = calculateNextTime();
                 preAlarm.add(Calendar.MINUTE, -1 * prealarmMinutes);
-                if (container.isPrealarm() && preAlarm.after(Calendar.getInstance())) {
+                if (container.isPrealarm() && preAlarm.after(Calendar.getInstance()) && prealarmMinutes != -1) {
                     transitionTo(preAlarmSet);
                 } else {
                     transitionTo(set);

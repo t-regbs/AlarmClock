@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.premium.alarm"
-    android:versionCode="2509"
-    android:versionName="2.5.09" >
+    android:versionCode="2514"
+    android:versionName="2.5.14" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
         android:name=".AlarmApplication"
@@ -38,7 +39,8 @@
         <activity
             android:name=".presenter.AlarmDetailsActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
-            android:label="@string/set_alarm"/>
+            android:label="@string/set_alarm">
+        </activity>
 
         <!-- Application Settings -->
         <activity
@@ -51,7 +53,17 @@
             </intent-filter>
         </activity>
 
-        <!-- Forwards intents to the AlarmAlert or AlarmAlertFullScreen -->
+        <activity
+            android:name=".HandleSetAlarm"
+            android:excludeFromRecents="true"
+            android:permission="com.android.alarm.permission.SET_ALARM"
+            android:theme="@android:style/Theme.NoDisplay" >
+            <intent-filter>
+                <action android:name="android.intent.action.SET_ALARM" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+<!-- Forwards intents to the AlarmAlert or AlarmAlertFullScreen -->
         <receiver
             android:name=".presenter.alert.AlarmAlertReceiver"
             android:exported="false" >

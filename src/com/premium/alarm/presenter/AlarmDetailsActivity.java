@@ -19,17 +19,19 @@ package com.premium.alarm.presenter;
 
 import java.util.Calendar;
 
-import org.acra.ACRA;
-
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -74,6 +76,8 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
     private int mMinute;
     private TimePickerDialog mTimePickerDialog;
 
+    private SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle icicle) {
         setTheme(DynamicThemeHandler.getInstance().getIdForName(AlarmDetailsActivity.class.getName()));
@@ -85,6 +89,8 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
 
         // Override the default content view.
         setContentView(R.layout.details_activity);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
         // TODO Stop using preferences for this view. Save on done, not after
         // each change.
@@ -109,19 +115,12 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
         mPreAlarmPref = (CheckBoxPreference) findPreference("prealarm");
         mPreAlarmPref.setOnPreferenceChangeListener(this);
 
-        if (getIntent().hasExtra(Intents.EXTRA_ID)) {
-            int mId = getIntent().getIntExtra(Intents.EXTRA_ID, -1);
-            try {
-                alarm = alarms.getAlarm(mId);
-            } catch (AlarmNotFoundException e) {
-                Logger.getDefaultLogger().e("oops", e);
-                ACRA.getErrorReporter().handleSilentException(e);
-                finish();
-            }
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (intent.hasExtra(Intents.EXTRA_ID)) {
+            editExistingAlarm(intent);
         } else {
-            // No alarm means create a new alarm.
-            alarm = alarms.createNewAlarm();
-            isNewAlarm = true;
+            createNewDefaultAlarm(intent);
         }
 
         // Populate the prefs with the original alarm data. updatePrefs also
@@ -154,6 +153,60 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
         }
     }
 
+    private final OnSharedPreferenceChangeListener onSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            refreshPrealarmVisibility();
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sp.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+        refreshPrealarmVisibility();
+    }
+
+    private void refreshPrealarmVisibility() {
+        int duration = Integer.parseInt(sp.getString("prealarm_duration", "-1"));
+        if (duration == -1) {
+            getPreferenceScreen().removePreference(mPreAlarmPref);
+        } else {
+            getPreferenceScreen().addPreference(mPreAlarmPref);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(
+                onSharedPreferenceChangeListener);
+    }
+
+    /**
+     * Edit an existing alarm. Id of the alarm is specified in
+     * {@link Intents#EXTRA_ID} as int. To get it use
+     * {@link Intent#getIntExtra(String, int)}.
+     */
+    private void editExistingAlarm(Intent intent) {
+        int mId = intent.getIntExtra(Intents.EXTRA_ID, -1);
+        try {
+            alarm = alarms.getAlarm(mId);
+        } catch (AlarmNotFoundException e) {
+            Logger.getDefaultLogger().d("Alarm not found");
+            finish();
+        }
+    }
+
+    /**
+     * A new alarm has to be created.
+     */
+    private void createNewDefaultAlarm(Intent intent) {
+        // No alarm means create a new alarm.
+        alarm = alarms.createNewAlarm();
+        isNewAlarm = true;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // we inflate anyway even though currently we have only one entry. There
@@ -162,6 +215,7 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
         if (isNewAlarm) {
             menu.removeItem(R.id.set_alarm_menu_delete_alarm);
         }
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         return true;
     }
 
@@ -171,6 +225,13 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
         case R.id.set_alarm_menu_delete_alarm:
             deleteAlarm();
             break;
+
+        case android.R.id.home:
+            Intent parentActivityIntent = new Intent(this, AlarmsListActivity.class);
+            parentActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(parentActivityIntent);
+            finish();
+            return true;
 
         default:
             break;
