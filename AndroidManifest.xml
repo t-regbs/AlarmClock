@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.premium.alarm"
-    android:versionCode="2514"
-    android:versionName="2.5.14" >
+    android:versionCode="2601"
+    android:versionName="2.6.01" >
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="15" >
+        android:targetSdkVersion="21" >
     </uses-sdk>
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -93,6 +93,15 @@
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
+            android:taskAffinity="" />
+
+        <!-- Transparent activity with TimPickerFragment -->
+       <activity
+            android:name=".presenter.TransparentActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|navigation"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"
             android:taskAffinity="" />
 
         <!-- KlaxonPresenter plays sound -->

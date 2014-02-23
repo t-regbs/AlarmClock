@@ -26,6 +26,7 @@ import android.os.Message;
 import com.github.androidutils.logger.Logger;
 import com.github.androidutils.wakelock.WakeLockManager;
 import com.premium.alarm.model.interfaces.AlarmNotFoundException;
+import com.premium.alarm.model.interfaces.PresentationToModelIntents;
 
 public class AlarmsService extends Service implements Handler.Callback {
     /**
@@ -59,25 +60,35 @@ public class AlarmsService extends Service implements Handler.Callback {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getAction();
-        if (action.equals(AlarmsScheduler.ACTION_FIRED)) {
-            int id = intent.getIntExtra(AlarmsScheduler.EXTRA_ID, -1);
-            try {
+        try {
+            String action = intent.getAction();
+            if (action.equals(AlarmsScheduler.ACTION_FIRED)) {
+                int id = intent.getIntExtra(AlarmsScheduler.EXTRA_ID, -1);
+
                 AlarmCore alarm = alarms.getAlarm(id);
                 alarms.onAlarmFired(alarm,
                         CalendarType.valueOf(intent.getExtras().getString(AlarmsScheduler.EXTRA_TYPE)));
                 log.d("AlarmCore fired " + id);
-            } catch (AlarmNotFoundException e) {
-                Logger.getDefaultLogger().d("Alarm not found");
+
+            } else if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(Intent.ACTION_TIMEZONE_CHANGED)
+                    || action.equals(Intent.ACTION_LOCALE_CHANGED)) {
+                log.d("Refreshing alarms because of " + action);
+                alarms.refresh();
+
+            } else if (action.equals(Intent.ACTION_TIME_CHANGED)) {
+                alarms.onTimeSet();
+
+            } else if (action.equals(PresentationToModelIntents.ACTION_REQUEST_SNOOZE)) {
+                int id = intent.getIntExtra(AlarmsScheduler.EXTRA_ID, -1);
+                alarms.getAlarm(id).snooze();
+
+            } else if (action.equals(PresentationToModelIntents.ACTION_REQUEST_DISMISS)) {
+                int id = intent.getIntExtra(AlarmsScheduler.EXTRA_ID, -1);
+                alarms.getAlarm(id).dismiss();
+
             }
-
-        } else if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(Intent.ACTION_TIMEZONE_CHANGED)
-                || action.equals(Intent.ACTION_LOCALE_CHANGED)) {
-            log.d("Refreshing alarms because of " + action);
-            alarms.refresh();
-
-        } else if (action.equals(Intent.ACTION_TIME_CHANGED)) {
-            alarms.onTimeSet();
+        } catch (AlarmNotFoundException e) {
+            Logger.getDefaultLogger().d("Alarm not found");
         }
 
         Message msg = handler.obtainMessage(EVENT_RELEASE_WAKELOCK);
