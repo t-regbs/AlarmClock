@@ -114,6 +114,13 @@ public class VolumePreference extends DialogPreference implements View.OnKeyList
         view.setOnKeyListener(this);
         view.setFocusableInTouchMode(true);
         view.requestFocus();
+
+        if (getContext().getResources().getBoolean(R.bool.isBroadwayShow)) {
+            alarmSeekBar.setVisibility(View.GONE);
+            preAlarmSeekBar.setVisibility(View.GONE);
+            view.findViewById(R.id.seekbar_alarm_prealarm_title).setVisibility(View.GONE);
+            view.findViewById(R.id.seekbar_main_alarm_title).setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -39,6 +39,7 @@
         android:padding="20dip" />
 
     <TextView
+        android:id="@+id/seekbar_main_alarm_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_alarm" />
@@ -50,6 +51,7 @@
         android:padding="20dip" />
 
     <TextView
+        android:id="@+id/seekbar_alarm_prealarm_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/alarm_prealarm" />
