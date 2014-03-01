@@ -17,6 +17,10 @@
 
 package com.premium.alarm.presenter.background;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Random;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,6 +44,9 @@ import android.telephony.TelephonyManager;
 
 import com.github.androidutils.logger.Logger;
 import com.github.androidutils.wakelock.WakeLockManager;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.premium.alarm.R;
 import com.premium.alarm.model.AlarmsManager;
 import com.premium.alarm.model.interfaces.Alarm;
@@ -391,6 +398,9 @@ public class KlaxonService extends Service {
             if (mTelephonyManager.getCallState() != TelephonyManager.CALL_STATE_IDLE) {
                 log.d("Using the in-call alarm");
                 setDataSourceFromResource(getResources(), mMediaPlayer, R.raw.in_call_alarm);
+            } else if (getResources().getBoolean(R.bool.isBroadwayShow)) {
+                log.d("Using the BroadwayShow alarm");
+                setDataSourceFromResource(getResources(), mMediaPlayer, rollBroadwayShowDice());
             } else {
                 mMediaPlayer.setDataSource(this, alert);
             }
@@ -471,5 +481,30 @@ public class KlaxonService extends Service {
     private void nullifyMediaPlayer() {
         mMediaPlayer = new NullMediaPlayer();
         volume.setPlayer(mMediaPlayer);
+    }
+
+    private int rollBroadwayShowDice() {
+        FluentIterable<Field> fields = FluentIterable.from(Arrays.asList(R.raw.class.getFields())).filter(
+                new Predicate<Field>() {
+                    @Override
+                    public boolean apply(Field field) {
+                        return field.getName().contains("roadway");
+                    };
+                });
+
+        final int index = new Random().nextInt(fields.size());
+        Optional<Field> match = fields.firstMatch(new Predicate<Field>() {
+            @Override
+            public boolean apply(Field field) {
+                String name = field.getName();
+                return name.contains("_" + index + "_") || name.endsWith("_" + index);
+            };
+        });
+
+        try {
+            return match.get().getInt(null);
+        } catch (Exception e) {
+            return R.raw.broadway_0;
+        }
     }
 }
