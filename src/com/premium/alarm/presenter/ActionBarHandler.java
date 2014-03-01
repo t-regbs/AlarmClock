@@ -57,14 +57,21 @@ public class ActionBarHandler {
 
         // Add data to the intent, the receiving app will decide what to do with
         // it.
-        intent.putExtra(Intent.EXTRA_SUBJECT, "https://play.google.com/store/apps/details?id=com.premium.alarm");
-        intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.premium.alarm");
+        String reviewUrl = "https://play.google.com/store/apps/details?id="
+                + mContext.getApplicationContext().getPackageName();
+        intent.putExtra(Intent.EXTRA_SUBJECT, reviewUrl);
+        intent.putExtra(Intent.EXTRA_TEXT, reviewUrl);
 
         sp.setShareIntent(intent);
 
         if (Build.VERSION.SDK_INT < JELLY_BEAN_MR1) {
             MenuItem menuItemDashclock = menu.findItem(R.id.menu_dashclock);
             menuItemDashclock.setVisible(false);
+        }
+
+        if (mContext.getResources().getBoolean(R.bool.isBroadwayShow)) {
+            menu.findItem(R.id.menu_dashclock).setVisible(false);
+            menu.findItem(R.id.menu_mp3cutter).setVisible(false);
         }
 
         return true;
