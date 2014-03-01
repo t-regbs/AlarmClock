@@ -151,6 +151,11 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
         if (isNewAlarm) {
             TimePickerDialogFragment.showTimePicker(alarm, getFragmentManager());
         }
+
+        if (getResources().getBoolean(R.bool.isBroadwayShow)) {
+            getPreferenceScreen().removePreference(mAlarmPref);
+            getPreferenceScreen().removePreference(mPreAlarmPref);
+        }
     }
 
     private final OnSharedPreferenceChangeListener onSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
@@ -169,7 +174,7 @@ public class AlarmDetailsActivity extends PreferenceActivity implements Preferen
 
     private void refreshPrealarmVisibility() {
         int duration = Integer.parseInt(sp.getString("prealarm_duration", "-1"));
-        if (duration == -1) {
+        if (duration == -1 || getResources().getBoolean(R.bool.isBroadwayShow)) {
             getPreferenceScreen().removePreference(mPreAlarmPref);
         } else {
             getPreferenceScreen().addPreference(mPreAlarmPref);
