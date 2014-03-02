@@ -90,6 +90,12 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
                 return true;
             }
         });
+
+        if (getResources().getBoolean(R.bool.isBroadwayShow)) {
+            getPreferenceScreen().removePreference(findPreference("vibrate"));
+            getPreferenceScreen().removePreference(findPreference("prealarm_duration"));
+            getPreferenceScreen().removePreference(findPreference("default_ringtone"));
+        }
     }
 
     @Override
@@ -200,8 +206,10 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         listPref.setOnPreferenceChangeListener(this);
 
         listPref = (ListPreference) findPreference(KEY_PREALARM_DURATION);
-        updatePreAlarmDurationSummary(listPref, listPref.getValue());
-        listPref.setOnPreferenceChangeListener(this);
+        if (listPref != null) {
+            updatePreAlarmDurationSummary(listPref, listPref.getValue());
+            listPref.setOnPreferenceChangeListener(this);
+        }
 
         listPref = (ListPreference) findPreference(KEY_FADE_IN_TIME_SEC);
         updateFadeInTimeSummary(listPref, listPref.getValue());

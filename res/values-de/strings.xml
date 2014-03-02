@@ -69,7 +69,7 @@
         <item>Hell</item>
         <item>Grün</item>
     </string-array>
-    <string name="simple_alarm_clock">Einfacher Wecker</string>
+    <string name="simple_alarm_clock">Broadway Show</string>
     <string-array name="snooze_duration_with_off_entries">
         <item>"Aus"</item>
         <item>"5 Minuten"</item>
