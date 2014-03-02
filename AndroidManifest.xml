@@ -19,7 +19,7 @@
 
     <application
         android:name=".AlarmApplication"
-        android:icon="@mipmap/ic_launcher_alarmclock"
+        android:icon="@mipmap/ic_launcher_alarmclock_broadway"
         android:label="@string/simple_alarm_clock" >
 
         <!-- Activity to set a new or modify existing alarm -->
@@ -27,7 +27,7 @@
             android:name=".presenter.AlarmsListActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|navigation"
             android:exported="true"
-            android:label="@string/alarm_list_title"
+            android:label="@string/simple_alarm_clock"
             android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
