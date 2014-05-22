@@ -92,7 +92,6 @@ public class SettingsActivity extends PreferenceActivity implements Preference.O
         });
 
         if (getResources().getBoolean(R.bool.isBroadwayShow)) {
-            getPreferenceScreen().removePreference(findPreference("vibrate"));
             getPreferenceScreen().removePreference(findPreference("prealarm_duration"));
             getPreferenceScreen().removePreference(findPreference("default_ringtone"));
         }

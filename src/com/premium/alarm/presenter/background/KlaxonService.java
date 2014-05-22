@@ -31,6 +31,7 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -65,6 +66,21 @@ public class KlaxonService extends Service {
     private PowerManager pm;
     private WakeLock wakeLock;
     private SharedPreferences sp;
+    private final OnCompletionListener completionListener = new OnCompletionListener() {
+        private boolean isDisplaicmerPlaying;
+
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            try {
+                initializePlayer(getAlertOrDefault(alarm), isDisplaicmerPlaying);
+                mMediaPlayer.setVolume(1f, 1f);
+                isDisplaicmerPlaying = !isDisplaicmerPlaying;
+            } catch (Exception e) {
+                log.e("Pizdec");
+            }
+        }
+    };
+    private Alarm alarm;
 
     /**
      * Dispatches intents to the KlaxonService
@@ -277,12 +293,12 @@ public class KlaxonService extends Service {
         try {
             String action = intent.getAction();
             if (action.equals(Intents.ALARM_ALERT_ACTION)) {
-                Alarm alarm = AlarmsManager.getAlarmsManager().getAlarm(intent.getIntExtra(Intents.EXTRA_ID, -1));
+                alarm = AlarmsManager.getAlarmsManager().getAlarm(intent.getIntExtra(Intents.EXTRA_ID, -1));
                 onAlarm(alarm);
                 return START_STICKY;
 
             } else if (action.equals(Intents.ALARM_PREALARM_ACTION)) {
-                Alarm alarm = AlarmsManager.getAlarmsManager().getAlarm(intent.getIntExtra(Intents.EXTRA_ID, -1));
+                alarm = AlarmsManager.getAlarmsManager().getAlarm(intent.getIntExtra(Intents.EXTRA_ID, -1));
                 onPreAlarm(alarm);
                 return START_STICKY;
 
@@ -342,7 +358,7 @@ public class KlaxonService extends Service {
         volume.cancelFadeIn();
         volume.setMode(Volume.Type.NORMAL);
         if (!alarm.isSilent()) {
-            initializePlayer(getAlertOrDefault(alarm));
+            initializePlayer(getAlertOrDefault(alarm), false);
             volume.fadeInAsSetInSettings();
         }
     }
@@ -351,7 +367,7 @@ public class KlaxonService extends Service {
         volume.cancelFadeIn();
         volume.setMode(Volume.Type.PREALARM);
         if (!alarm.isSilent()) {
-            initializePlayer(getAlertOrDefault(alarm));
+            initializePlayer(getAlertOrDefault(alarm), false);
             volume.fadeInAsSetInSettings();
         }
     }
@@ -361,7 +377,7 @@ public class KlaxonService extends Service {
         volume.setMode(type);
         // if already playing do nothing. In this case signal continues.
         if (!mMediaPlayer.isPlaying()) {
-            initializePlayer(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
+            initializePlayer(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), false);
         }
         volume.apply();
     }
@@ -370,8 +386,10 @@ public class KlaxonService extends Service {
      * Inits player and sets volume to 0
      * 
      * @param alert
+     * @param playBroadwayDelimeter
+     *            TODO
      */
-    private void initializePlayer(Uri alert) {
+    private void initializePlayer(Uri alert, boolean playBroadwayDelimeter) {
         // stop() checks to see if we are already playing.
         stop();
 
@@ -400,7 +418,8 @@ public class KlaxonService extends Service {
                 setDataSourceFromResource(getResources(), mMediaPlayer, R.raw.in_call_alarm);
             } else if (getResources().getBoolean(R.bool.isBroadwayShow)) {
                 log.d("Using the BroadwayShow alarm");
-                setDataSourceFromResource(getResources(), mMediaPlayer, rollBroadwayShowDice());
+                setDataSourceFromResource(getResources(), mMediaPlayer, playBroadwayDelimeter ? R.raw.delimeter
+                        : rollBroadwayShowDice());
             } else {
                 mMediaPlayer.setDataSource(this, alert);
             }
@@ -440,7 +459,8 @@ public class KlaxonService extends Service {
         // (typically because ringer mode is silent).
         if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
             player.setAudioStreamType(AudioManager.STREAM_ALARM);
-            player.setLooping(true);
+            player.setLooping(false);
+            player.setOnCompletionListener(completionListener);
             player.prepare();
             player.start();
         }
