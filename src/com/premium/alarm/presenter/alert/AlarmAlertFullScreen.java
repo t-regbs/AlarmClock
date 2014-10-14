@@ -34,6 +34,7 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.androidutils.logger.Logger;
 import com.premium.alarm.R;
@@ -122,8 +123,7 @@ public class AlarmAlertFullScreen extends Activity implements AlarmTimePickerDia
             mVolumeBehavior = Integer.parseInt(vol);
 
             final Window win = getWindow();
-            win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                    | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
             // Turn on the screen unless we are being launched from the
             // AlarmAlert
             // subclass as a result of the screen turning off.
@@ -149,8 +149,17 @@ public class AlarmAlertFullScreen extends Activity implements AlarmTimePickerDia
 
     private void setTitle() {
         final String titleText = mAlarm.getLabelOrDefault(this);
-
         setTitle(titleText);
+        TextView textView = (TextView) findViewById(R.id.alarm_alert_label);
+        textView.setText(titleText);
+
+        if (getLayoutResId() == R.layout.alert || getString(R.string.default_label).equals(titleText)) {
+            // in non-full screen mode we already see the label in the title.
+            // Therefore we hade the views with an additional label
+            // also, if the label is default, do not show it
+            textView.setVisibility(View.GONE);
+            findViewById(R.id.alert_label_divider).setVisibility(View.GONE);
+        }
     }
 
     protected int getLayoutResId() {
@@ -182,7 +191,7 @@ public class AlarmAlertFullScreen extends Activity implements AlarmTimePickerDia
             @Override
             public boolean onLongClick(View v) {
                 if (isSnoozeEnabled()) {
-                    TimePickerDialogFragment.showTimePicker(mAlarm, getFragmentManager());
+                    TimePickerDialogFragment.showTimePicker(getFragmentManager());
                     AlarmAlertFullScreen.this.sendBroadcast(new Intent(Intents.ACTION_MUTE));
                 }
                 return true;
@@ -224,6 +233,7 @@ public class AlarmAlertFullScreen extends Activity implements AlarmTimePickerDia
     // Dismiss the alarm.
     private void dismiss() {
         alarmsManager.dismiss(mAlarm);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
     }
 
     private boolean isSnoozeEnabled() {
@@ -308,13 +318,13 @@ public class AlarmAlertFullScreen extends Activity implements AlarmTimePickerDia
     }
 
     @Override
-    public void onDialogTimeSet(Alarm alarm, int hourOfDay, int minute) {
-        alarm.snooze(hourOfDay, minute);
+    public void onDialogTimeSet(int hourOfDay, int minute) {
+        mAlarm.snooze(hourOfDay, minute);
 
     }
 
     @Override
-    public void onTimePickerCanceled(Alarm alarm) {
+    public void onTimePickerCanceled() {
         AlarmAlertFullScreen.this.sendBroadcast(new Intent(Intents.ACTION_DEMUTE));
     }
 }

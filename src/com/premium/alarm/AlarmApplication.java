@@ -18,6 +18,8 @@ package com.premium.alarm;
 import java.lang.reflect.Field;
 
 import org.acra.ACRA;
+import org.acra.ErrorReporter;
+import org.acra.ExceptionHandlerInitializer;
 import org.acra.ReportField;
 import org.acra.annotation.ReportsCrashes;
 
@@ -105,11 +107,10 @@ public class AlarmApplication extends Application {
         WakeLockManager.init(getApplicationContext(), logger, true);
         AlarmsManager.init(getApplicationContext(), logger);
 
-        ACRA.getErrorReporter().addOnExceptionHandledCommand(new Runnable() {
+        ACRA.getErrorReporter().setExceptionHandlerInitializer(new ExceptionHandlerInitializer() {
             @Override
-            public void run() {
-                ACRA.getErrorReporter().putCustomData("STARTUP_LOG",
-                        StartupLogWriter.getInstance().getMessagesAsString());
+            public void initializeExceptionHandler(ErrorReporter reporter) {
+                reporter.putCustomData("STARTUP_LOG", StartupLogWriter.getInstance().getMessagesAsString());
             }
         });
 
