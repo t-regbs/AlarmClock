@@ -30,23 +30,11 @@ import android.view.ViewConfiguration;
 import com.github.androidutils.logger.FileLogWriter;
 import com.github.androidutils.logger.LogcatLogWriterWithLines;
 import com.github.androidutils.logger.Logger;
-import com.github.androidutils.logger.Logger.LogLevel;
 import com.github.androidutils.logger.LoggingExceptionHandler;
 import com.github.androidutils.logger.StartupLogWriter;
-import com.github.androidutils.statemachine.StateMachine;
 import com.github.androidutils.wakelock.WakeLockManager;
-import com.premium.alarm.model.AlarmCore;
-import com.premium.alarm.model.Alarms;
 import com.premium.alarm.model.AlarmsManager;
-import com.premium.alarm.model.AlarmsScheduler;
-import com.premium.alarm.model.AlarmsService;
-import com.premium.alarm.model.persistance.AlarmDatabaseHelper;
-import com.premium.alarm.model.persistance.AlarmProvider;
-import com.premium.alarm.presenter.AlarmsListFragment;
 import com.premium.alarm.presenter.DynamicThemeHandler;
-import com.premium.alarm.presenter.alert.AlarmAlertFullScreen;
-import com.premium.alarm.presenter.background.KlaxonService;
-import com.premium.alarm.presenter.background.VibrationService;
 
 // @formatter:off
 @ReportsCrashes(
@@ -91,20 +79,7 @@ public class AlarmApplication extends Application {
         logger.addLogWriter(StartupLogWriter.getInstance());
         LoggingExceptionHandler.addLoggingExceptionHandlerToAllThreads(logger);
 
-        logger.setLogLevel(WakeLockManager.class, LogLevel.ERR);
-        logger.setLogLevel(AlarmDatabaseHelper.class, LogLevel.ERR);
-        logger.setLogLevel(AlarmProvider.class, LogLevel.ERR);
-        logger.setLogLevel(AlarmsScheduler.class, LogLevel.DBG);
-        logger.setLogLevel(AlarmCore.class, LogLevel.DBG);
-        logger.setLogLevel(Alarms.class, LogLevel.DBG);
-        logger.setLogLevel(StateMachine.class, LogLevel.DBG);
-        logger.setLogLevel(AlarmsService.class, LogLevel.DBG);
-        logger.setLogLevel(KlaxonService.class, LogLevel.DBG);
-        logger.setLogLevel(VibrationService.class, LogLevel.DBG);
-        logger.setLogLevel(AlarmsListFragment.class, LogLevel.DBG);
-        logger.setLogLevel(AlarmAlertFullScreen.class, LogLevel.DBG);
-
-        WakeLockManager.init(getApplicationContext(), logger, true);
+        WakeLockManager.init(getApplicationContext(), new Logger(), true);
         AlarmsManager.init(getApplicationContext(), logger);
 
         ACRA.getErrorReporter().setExceptionHandlerInitializer(new ExceptionHandlerInitializer() {
