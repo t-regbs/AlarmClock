@@ -15,6 +15,7 @@
  */
 package com.premium.alarm;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
 import org.acra.ACRA;
@@ -24,10 +25,10 @@ import org.acra.ReportField;
 import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
+import android.content.Context;
 import android.preference.PreferenceManager;
 import android.view.ViewConfiguration;
 
-import com.github.androidutils.logger.FileLogWriter;
 import com.github.androidutils.logger.LogcatLogWriterWithLines;
 import com.github.androidutils.logger.Logger;
 import com.github.androidutils.logger.LoggingExceptionHandler;
@@ -40,7 +41,6 @@ import com.premium.alarm.presenter.DynamicThemeHandler;
 @ReportsCrashes(
         formKey = "",
         mailTo = "yuriy.kulikov.87@gmail.com",
-        applicationLogFile = "applog.log",
         applicationLogFileLines = 150,
         customReportContent = {
                 ReportField.IS_SILENT,
@@ -49,7 +49,6 @@ import com.premium.alarm.presenter.DynamicThemeHandler;
                 ReportField.ANDROID_VERSION,
                 ReportField.CUSTOM_DATA,
                 ReportField.STACK_TRACE,
-                ReportField.APPLICATION_LOG,
                 ReportField.SHARED_PREFERENCES,
                 })
 // @formatter:on
@@ -75,7 +74,6 @@ public class AlarmApplication extends Application {
 
         Logger logger = Logger.getDefaultLogger();
         logger.addLogWriter(LogcatLogWriterWithLines.getInstance());
-        logger.addLogWriter(FileLogWriter.getInstance(this, false));
         logger.addLogWriter(StartupLogWriter.getInstance());
         LoggingExceptionHandler.addLoggingExceptionHandlerToAllThreads(logger);
 
@@ -91,7 +89,19 @@ public class AlarmApplication extends Application {
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
+        deleteLogs(logger, getApplicationContext());
+
         logger.d("onCreate");
         super.onCreate();
+    }
+
+    private void deleteLogs(Logger logger, Context context) {
+        final File logFile = new File(context.getFilesDir(), "applog.log");
+        if (logFile.exists()) {
+            logFile.delete();
+            logger.d("Deleted log file");
+        } else {
+            logger.d("Log file was already deleted");
+        }
     }
 }
