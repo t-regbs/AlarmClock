@@ -134,7 +134,7 @@ dependencies {
   implementation("io.reactivex.rxjava2:rxjava:2.2.21")
   implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
   implementation("org.koin:koin-core:2.2.2")
-  implementation("androidx.fragment:fragment:1.4.1")
+  implementation("androidx.fragment:fragment:1.5.4")
   implementation("androidx.preference:preference:1.2.0")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
