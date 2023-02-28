@@ -15,7 +15,7 @@ buildscript {
   }
 }
 
-plugins { id("com.diffplug.spotless") version "6.7.2" }
+plugins { id("com.diffplug.spotless") version "6.16.0" }
 
 allprojects {
   repositories {
